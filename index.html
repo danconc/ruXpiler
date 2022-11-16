@@ -4,9 +4,115 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>type russian...</title>
+<style>
+label, input {
+    background: red;
+    color: white;
+    display: inline-block;
+    font: bold 14px Tahoma;
+    padding: 3px 5px;    
+    text-align: right;
+    width: 120px;
+}
+input {
+    background: #fff;
+    border: 1px solid gray;
+    color: #363042;
+    font-weight: none;
+    outline-color: green;
+    text-align: left;
+    width: 250px;
+}
+</style>
 </head>
 <body>
-    
+
+<main>
+    <h4><tt>type russian...</tt></h4>
+    <p>
+        <label for="kbInput">Russian</label>
+        <input type="text" id="kbInput" class="" placeholder="Введите текст здесь..." value="" title="B*i-de'-d'e d'ecst s'dis (Enter text here)">
+    </p>
+    <p>
+        <label for="enInput">Translation</label>
+        <input type="text" id="enInput" class="" placeholder="Enter translation here" value="">
+    </p>
+    <p>
+        <label for="prInput">Pronunciation</label>
+        <input type="text" id="prInput" class="" placeholder="Enter pronunciation here" value="">
+    </p>
+    <button id="submitBtn">Submit</button>
+
+    <p id="display"></p>
+</main>
+
+<script src="../common/helpers.js"></script>
+<script>
+var tt = {
+    // last: '',
+       idx: -1,
+       ID: '',
+    // addChar: function (letter) { console.log('fn::addChar');
+    //     const ptr = getHook(tt.ID);
+    //     const txt = ptr.value;
+
+    //     console.log('addChar function::txt:' + txt);
+
+    //     if(letter !== 'undefined') { ptr.value = txt + letter; }
+    // },
+    getRu: function (key) {console.log('fn::getRu');
+        const lowRu = ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"];
+        const capRu = ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+        const capEn = ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+        const lowEn = ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+        
+        const idx = getIdx(lowEn, key);
+        const ru = lowRu[idx];
+
+        return ru;
+    },
+    moveFocus: function () {console.log('fn::moveFocus');
+        const id = ['#kbInput', '#enInput', '#prInput', '#submitBtn'];
+
+        tt.idx++;
+
+        if(tt.idx >= 3) { tt.idx === -1; }
+
+        getHook(id[tt.idx]).focus();
+        tt.ID = id[tt.idx];
+    },
+    // addEntry: function () {console.log('fn::addEntry');
+    //     let str = html(getHook('#display'), 'Is it working?');
+
+    // },
+    // submitBtn: function() {
+    //     var activeElement = document.activeElement;
+    //     var myElement = getHook('#submitBtn');
+    //     if (activeElement === myElement) { tt.addEntry(); }
+    // },
+    init: function () { console.log('fn::init');
+        listen(getHook('#kbInput'), 'keydown', function(event) {
+            console.log('event.key: ' + event.key);
+
+            const inputFocused = hasFocus('#kbInput');
+            // console.log('event.key: ' + event.key);
+            // if (event.key === "Enter") {
+            //     event.preventDefault();
+            //     tt.submitBtn();
+            // }
+            // else if (event.key === "Tab") { tt.moveFocus(); }
+            // else if (event.key === undefined) { console.log('oops!'); }
+
+            // else { tt.addChar(tt.getRu(event.key)); }                    
+        });
+        
+        tt.moveFocus();
+    }
+};
+
+window.onload = tt.init();;
+</script>
+
 </body>
 </html>
