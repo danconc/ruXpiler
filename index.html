@@ -15,6 +15,8 @@ label, input {
     text-align: right;
     width: 120px;
 }
+    label::after { content: ":"; }
+
 input {
     background: #fff;
     border: 1px solid gray;
@@ -67,10 +69,10 @@ var tt = {
         const capEn = ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
         const lowEn = ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
         
-        const idx = getIdx(lowEn, key);
-        const ru = lowRu[idx];
+        // const idx = getIdx(lowEn, key);
+        // const ru = lowRu[idx];
 
-        return ru;
+        // return ru;
     },
     moveFocus: function () {console.log('fn::moveFocus');
         const id = ['#kbInput', '#enInput', '#prInput', '#submitBtn'];
@@ -110,6 +112,9 @@ var tt = {
         tt.moveFocus();
     }
 };
+
+// https://www.russlandjournal.de/en/learn-russian/russian-alphabet/
+// https://translate.yandex.com/?lang=en-ru&text=I%20eating%20an%20apples
 
 window.onload = tt.init();;
 </script>
