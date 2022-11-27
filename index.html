@@ -49,31 +49,30 @@ input {
     <p id="display"></p>
 </main>
 
-<script src="../common/helpers.js"></script>
+<script src="helpers.js"></script>
 <script>
 var tt = {
     // last: '',
        idx: -1,
        ID: '',
-    // addChar: function (letter) { console.log('fn::addChar');
-    //     const ptr = getHook(tt.ID);
-    //     const txt = ptr.value;
+    addChar: function (letter) { console.log('fn::addChar');
+        const ptr = getHook(tt.ID);
+        const txt = ptr.value;
 
-    //     console.log('addChar function::txt:' + txt);
-
-    //     if(letter !== 'undefined') { ptr.value = txt + letter; }
-    // },
-    getRu: function (key) {console.log('fn::getRu');
-        const lowRu = ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"];
-        const capRu = ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
-        const capEn = ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
-        const lowEn = ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
-        
-        // const idx = getIdx(lowEn, key);
-        // const ru = lowRu[idx];
-
-        // return ru;
+        console.log('addChar function::txt:' + txt);
+        ptr.value = txt + letter;
     },
+    // getRu: function (key) {console.log('fn::getRu');
+    //     // const lowRu = ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"];
+    //     // const capRu = ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+    //     // const capEn = ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+    //     // const lowEn = ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+        
+    //     // const idx = getIdx(lowEn, key);
+    //     // const ru = lowRu[idx];
+
+    //     // return ru;
+    // },
     moveFocus: function () {console.log('fn::moveFocus');
         const id = ['#kbInput', '#enInput', '#prInput', '#submitBtn'];
 
@@ -93,11 +92,39 @@ var tt = {
     //     var myElement = getHook('#submitBtn');
     //     if (activeElement === myElement) { tt.addEntry(); }
     // },
+    lowRu : ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"],
+    capRu : ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"],
+    capEn : ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"],
+    lowEn : ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"],
+    
     init: function () { console.log('fn::init');
         listen(getHook('#kbInput'), 'keydown', function(event) {
-            console.log('event.key: ' + event.key);
+            const key = event.key + '';
+            const idx = tt.lowEn.indexOf(key);
 
-            const inputFocused = hasFocus('#kbInput');
+            event.preventDefault();
+
+            if(idx !== -1) { //small letter?
+                console.log('key: ' + key + '\nidx: ' + idx);
+                tt.addChar(tt.lowRu[idx]);
+            } else { //check for cap...
+
+            }
+
+            
+
+
+
+
+            // var isSmall = ((event.key.indexOf(tt.lowEn)) > -1); 
+            // const skip = ['Shift', 'Backspace', '/'];
+            // const isSpecail = ((skip.indexOf(event.key)) > -1);
+            // const isCombo = (event.key === '/');
+            // console.log('event.key: ' + event.key + '\nspecial: ' + isSpecail
+            // + '\nisSmall: ' + isSmall); 
+
+
+            //const inputFocused = hasFocus('#kbInput');
             // console.log('event.key: ' + event.key);
             // if (event.key === "Enter") {
             //     event.preventDefault();
