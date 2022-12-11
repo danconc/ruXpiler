@@ -26,6 +26,12 @@ input {
     text-align: left;
     width: 250px;
 }
+
+main {
+    border: 1px solid #363042;
+    padding: 20px;
+    width: 400px;
+}
 </style>
 </head>
 <body>
@@ -46,20 +52,21 @@ input {
     </p>
     <button id="submitBtn">Submit</button>
 
-    <p id="display"></p>
+    <p id="display">/* this is used to display log entry */</p>
 </main>
+
+<p><img src="./kb-shortcuts.png"></p>
 
 <script src="helpers.js"></script>
 <script>
 var tt = {
-       last: undefined,
-       idx: -1,
-       ID: '',
-    addChar: function (letter) { console.log('fn::addChar');
+    last: undefined,
+    idx: -1,
+    ID: '',
+    shift: false,
+    addChar: function (letter) {
         const ptr = getHook(tt.ID);
         const txt = ptr.value;
-
-        console.log('addChar function::txt:' + txt);
         ptr.value = txt + letter;
     },
     // getRu: function (key) {console.log('fn::getRu');
@@ -73,12 +80,12 @@ var tt = {
 
     //     // return ru;
     // },
-    moveFocus: function () {console.log('fn::moveFocus');
+    moveFocus: function () { //console.log('fn::moveFocus');
         const id = ['#kbInput', '#enInput', '#prInput', '#submitBtn'];
 
         tt.idx++;
 
-        if(tt.idx >= 3) { tt.idx === -1; }
+        if(tt.idx >= 3) { tt.idx === 0; }
 
         getHook(id[tt.idx]).focus();
         tt.ID = id[tt.idx];
@@ -94,27 +101,63 @@ var tt = {
     // },
     lowRu : ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"],
     capRu : ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"],
-    capEn : ["А", "B", "V", "G", "D", "Y", "Y", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "1", "Ъ", "Ы", "Ь", "Э", "Ю", "Y"],
-    lowEn : ["a", "b", "v", "g", "d", "y", "y", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "1", "Ъ", "Ы", "Ь", "Э", "Ю", "y"],
+    capEn : ["А", "B", "V", "G", "D", "E", "j", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "1", "Ъ", "Ы", "Ь", "Э", "Ю", "Y"],
+    lowEn : ["a", "b", "v", "g", "d", "e", "j", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "1", "Ъ", "Ы", "Ь", "Э", "Ю", "y"],
     
+    keyDown : function (event) {
+        const key = event.key + '';
+        let idx = ((tt.shift) ? tt.capEn.indexOf(key) : tt.lowEn.indexOf(key));
+        const special = [' ', ',', '.', '?'];
+        const combo = [];
+
+        event.preventDefault();
+
+        if (special.indexOf(event.key) !== -1) { tt.addChar(event.key) }
+
+        if(event.key === 'Shift') { tt.shift = true; return; }
+
+        if(idx !== -1) {
+            if(key === 'j' && tt.last === undefined) {
+                    tt.last = key;
+                    console.log('special: "j"');
+                    return;
+            }
+
+            if(tt.shift) {
+                tt.addChar(tt.capRu[idx]);
+                tt.shift = false;
+            } else {
+                tt.addChar(tt.lowRu[idx]);
+            }
+        } else {
+            console.log('doesn\'t exist');
+        }
+    },
     multiple : false,
     init: function () { console.log('fn::init');
-        listen(getHook('#kbInput'), 'keydown', function(event) {
+        listen(getHook('#kbInput'), 'keydown', tt.keyDown);
+        /*, function(event) {
             const key = event.key + '';
-            const idx = tt.lowEn.indexOf(key);
+            let idx = tt.lowEn.indexOf(key);
             
             console.log('event.key: ' + event.key + '\nidx: ' + idx);
 
+            if(event.key === 'Shift') { console.log('SHIFTED!');
+                tt.shift = true;
+                return;
+            }
+
             if(idx !== -1) { //small letter? 
                 event.preventDefault();
-                if(key === 'y' && tt.last === undefined) {                    tt.last = key;
-                    console.log('special: "y"');
+                if(key === 'j' && tt.last === undefined) {
+                    tt.last = key;
+                    console.log('special: "j"');
                     return;
                 }
 
-                if (tt.last === 'y') {
+                if (tt.last === 'j') {
                     let newLetter = '';
-                    switch(key) {
+                    switch(key) { //tt.shift
                         case 'a': newLetter = 'я'; break;
                         case 'e': newLetter = 'е'; break;
                         case 'o': newLetter = 'ё'; break;
@@ -127,15 +170,19 @@ var tt = {
 
                 if (tt.last === ' ') {
                     tt.addChar(' ');
+                    tt.last = undefined;
                     return;
-                }                
-
-                tt.addChar(tt.lowRu[idx]);
-            } else { //check for cap...
-
-            }
-
-            
+                }
+                
+                if(tt.shift) {
+                    tt.addChar(tt.capEn[idx]);
+                    tt.shift = false;
+                    console.log('shifted');
+                } else {
+                    tt.addChar(tt.lowRu[idx]);
+                }
+            }*/
+        //)};        
 
 
 
@@ -158,7 +205,7 @@ var tt = {
             // else if (event.key === undefined) { console.log('oops!'); }
 
             // else { tt.addChar(tt.getRu(event.key)); }                    
-        });
+        //});
         
         tt.moveFocus();
     }
