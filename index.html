@@ -72,8 +72,8 @@ var tt = {
     // getRu: function (key) {console.log('fn::getRu');
     //     // const lowRu = ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"];
     //     // const capRu = ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
-    //     // const capEn = ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
-    //     // const lowEn = ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+    //     // const capEn = ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "U", "F", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
+    //     // const lowEn = ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "6", "7", "8", "9", "10", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"];
         
     //     // const idx = getIdx(lowEn, key);
     //     // const ru = lowRu[idx];
@@ -82,13 +82,17 @@ var tt = {
     // },
     moveFocus: function () { //console.log('fn::moveFocus');
         const id = ['#kbInput', '#enInput', '#prInput', '#submitBtn'];
+        var ptr = null;
 
         tt.idx++;
 
         if(tt.idx >= 3) { tt.idx === 0; }
 
-        getHook(id[tt.idx]).focus();
+        ptr = getHook(id[tt.idx]);
+        ptr.focus();
         tt.ID = id[tt.idx];
+
+        return ptr;
     },
     // addEntry: function () {console.log('fn::addEntry');
     //     let str = html(getHook('#display'), 'Is it working?');
@@ -101,27 +105,36 @@ var tt = {
     // },
     lowRu : ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"],
     capRu : ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"],
-    capEn : ["А", "B", "V", "G", "D", "E", "j", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "Y", "F", "6", "7", "8", "9", "1", "Ъ", "Ы", "Ь", "Э", "Ю", "Y"],
-    lowEn : ["a", "b", "v", "g", "d", "e", "j", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "y", "f", "6", "7", "8", "9", "1", "Ъ", "Ы", "Ь", "Э", "Ю", "y"],
+    capEn : ["А", "B", "V", "G", "D", "E", "2", "3", "Z", "I", "4", "К", "L", "М", "N", "О", "P", "R", "S", "Т", "U", "F", "6", "7", "8", "9", "1", "Ъ", "Y", "Ь", "Э", "?", "Y"],
+    lowEn : ["a", "b", "v", "g", "d", "e", "2", "3", "z", "i", "4", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "6", "7", "8", "9", "1", "Ъ", "y", "Ь", "Э", "?", "y"],
     
     keyDown : function (event) {
         const key = event.key + '';
         let idx = ((tt.shift) ? tt.capEn.indexOf(key) : tt.lowEn.indexOf(key));
         const special = [' ', ',', '.', '?'];
-        const combo = ['j', 'z', 'k', 'c', 's', "'", '"'];
+        const combo = ['j', 'z', 'k', 'c', 's', "h", '"'];
 
         event.preventDefault();
+
+        console.log('idx: ' + idx);
 
         if (special.indexOf(event.key) !== -1) { tt.addChar(event.key) }
 
         if(event.key === 'Shift') { tt.shift = true; return; }
 
-        if(idx !== -1) {
-            if(key === 'j' && tt.last === undefined) {
-                    tt.last = key;
-                    console.log('special: "j"');
-                    return;
-            }
+        if(tt.shift) {
+            tt.addChar(tt.capRu[idx]);
+            tt.shift = false;
+        } else {
+            tt.addChar(tt.lowRu[idx]);
+        }
+
+        // if(idx !== -1) {
+        //     if(key === 'j' || key === 'J' && tt.last === undefined) {
+        //             tt.last = key;
+        //             console.log('special: "j"');
+        //             return;
+        //     }
 
             if(tt.shift) {
                 tt.addChar(tt.capRu[idx]);
@@ -129,9 +142,9 @@ var tt = {
             } else {
                 tt.addChar(tt.lowRu[idx]);
             }
-        } else {
-            console.log('doesn\'t exist');
-        }
+        // } else {
+        //     console.log(event.key + ' doesn\'t exist');
+        // }
     },
     multiple : false,
     init: function () { console.log('fn::init');
